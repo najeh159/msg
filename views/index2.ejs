@@ -1,0 +1,99 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Message</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e2e2e2;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #333;
+      animation: fadeIn 2s;
+    }
+    p {
+      font-size: 1.2em;
+      color: #555;
+      margin-top: 20px;
+      animation: slideIn 2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .heart {
+      color: red;
+      font-size: 2em;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s;
+    }
+    .yeah {
+      background-color: #5cb85c;
+      color: white;
+    }
+    .no {
+      background-color: #d9534f;
+      color: white;
+    }
+    .cant-answer {
+      background-color: #f0ad4e;
+      color: white;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>Someone really likes you, <%= name %>! 💖</h1>
+  <p class="heart">You’ve got that special charm!</p>
+  <p>Keep shining and spreading those good vibes!</p>
+  
+  <button class="yeah" id="yeahButton" onclick="sendResponse('yay', this)">Yeah</button>
+  <button class="no" id="noButton" onclick="sendResponse('no', this)">No</button>
+  <button class="cant-answer" id="cantAnswerButton" onclick="sendResponse('cant_answer', this)">Can't Answer</button>
+
+  <script>
+    function sendResponse(response, button) {
+      let message;
+      if (response === 'yay') {
+        message = 'Yay! Thx';
+        button.innerText = message;
+      } else if (response === 'no') {
+        message = 'Ok 😥 Sorry for annoying u';
+        button.innerText = message;
+      } else if (response === 'cant_answer') {
+        message = 'Take ur time';
+        button.innerText = message;
+      }
+
+      fetch('/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ response: response, name: '<%= name %>' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data.message);
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
